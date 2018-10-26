@@ -50,3 +50,16 @@ export const modifiedItemTree = {
     children: [{ tag: 'text', content: '🍌' }],
   }],
 };
+
+export const switchedItemTree = {
+  tag: 'ul',
+  children: [{
+    tag: 'li',
+    key: 'banana',
+    children: [{ tag: 'text', content: '🍌' }],
+  }, {
+    tag: 'li',
+    key: 'apple',
+    children: [{ tag: 'text', content: '🍎' }],
+  }],
+};

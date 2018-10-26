@@ -1,4 +1,4 @@
-import { rawTree, addedItemTree, removedItemTree, modifiedItemTree } from './mockData.js';
+import { rawTree, addedItemTree, removedItemTree, modifiedItemTree, switchedItemTree } from './mockData.js';
 
 const removeOldNode = (oldNode, rootNode) => {
   if (oldNode && oldNode.$ele) {
@@ -7,14 +7,20 @@ const removeOldNode = (oldNode, rootNode) => {
   }
 };
 
-const createNewNode = (node, parentNode, index = 0) => {
-  const element = node.tag === 'text' ? document.createTextNode(node.content) : document.createElement(node.tag);
-  node.$ele = element;
+const insertElementAt = (element, parentNode, index = 0) => {
   if (index >= parentNode.children) {
     parentNode.appendChild(element);
   } else {
     parentNode.insertBefore(element, parentNode.children[index]);
   }
+};
+
+
+const createNewNode = (node, parentNode, index = 0) => {
+  const element = node.tag === 'text' ? document.createTextNode(node.content) : document.createElement(node.tag);
+  node.$ele = element;
+  node.$index = index;
+  insertElementAt(element, parentNode, index);
   (node.children || []).forEach((childElement, i) => createNewNode(childElement, element, i));
 };
 
@@ -41,7 +47,7 @@ const diffLayer = (oldLayer = [], newLayer = []) => {
       const oldMatch = hasOldKey ? keyIndexInNewLayer[oldLayer[index].key] : undefined;
       const newMatch = hasNewKey ? keyIndexInOldLayer[newLayer[index].key] : undefined;
       if (!oldMatch) { // Avoid to be push twice.
-        paris.push([oldLayer[index], oldMatch, index]);
+        paris.push([oldLayer[index], undefined, index]);
       }
       paris.push([newMatch, newLayer[index], index]);
     } else  {
@@ -64,18 +70,21 @@ const replaceNode = (oldNode, newNode) => {
   }
 };
 
-const renderLayer = (oldNode, newNode, rootNode, index) => {
+const renderLayer = (oldNode, newNode, parentNode, index) => {
   if (!newNode) {
-    removeOldNode(oldNode, rootNode);
+    removeOldNode(oldNode, parentNode);
   } else if (!oldNode) {
-    createNewNode(newNode, rootNode, index);
+    createNewNode(newNode, parentNode, index);
   } else {
     newNode.$ele = oldNode.$ele;
     if (oldNode.tag !== newNode.tag || oldNode.key !== newNode.key) {
-      removeOldNode(oldNode, rootNode);
-      createNewNode(newNode, rootNode, index);
+      removeOldNode(oldNode, parentNode);
+      createNewNode(newNode, parentNode, index);
     } else {
-      replaceNode(oldNode, newNode);
+      if (oldNode.$index !== index) {
+        insertElementAt(oldNode.$ele, parentNode, index);
+      }
+      replaceNode(oldNode, newNode, index);
     }
   }
 };
@@ -92,9 +101,18 @@ const deepCloneJSONObject = (json) => {
 const run = () => {
   const root = document.querySelector('#root');
   render(undefined, deepCloneJSONObject(rawTree), root);
-  document.querySelector('#addBtn').addEventListener('click', () => render(currentTree, deepCloneJSONObject(addedItemTree), root));
-  document.querySelector('#removeBtn').addEventListener('click', () => render(currentTree, deepCloneJSONObject(removedItemTree), root));
-  document.querySelector('#modifyBtn').addEventListener('click', () => render(currentTree, deepCloneJSONObject(modifiedItemTree), root));
+  document.querySelector('#addBtn').addEventListener('click',
+    () => render(currentTree, deepCloneJSONObject(addedItemTree), root)
+  );
+  document.querySelector('#removeBtn').addEventListener('click',
+    () => render(currentTree, deepCloneJSONObject(removedItemTree), root)
+  );
+  document.querySelector('#modifyBtn').addEventListener('click',
+    () => render(currentTree, deepCloneJSONObject(modifiedItemTree), root)
+  );
+  document.querySelector('#switchBtn').addEventListener('click',
+    () => render(currentTree, deepCloneJSONObject(switchedItemTree), root)
+  );
 };
 
 run();
