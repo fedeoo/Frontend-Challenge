@@ -4,16 +4,15 @@ const shapeBox = document.querySelector('.shape-box');
 
 const drawShapeBox = () => {
   SHAPES.map((shape) => {
-    const ele = document.createElement('div');
-    ele.classList.add('shape');
-    ele.classList.add(`shape-${shape.toLowerCase()}`);
-    ele.setAttribute('draggable', true);
-    ele.dataset.type = shape;
-    ele.addEventListener('dragstart', (event) => {
-      console.log('drag', event);
+    const shapeElement = document.createElement('div');
+    shapeElement.classList.add('shape');
+    shapeElement.classList.add(`shape-${shape.toLowerCase()}`);
+    shapeElement.setAttribute('draggable', true);
+    shapeElement.dataset.type = shape;
+    shapeElement.addEventListener('dragstart', (event) => {
       event.dataTransfer.setData('shape', shape);
     });
-    shapeBox.appendChild(ele);
+    shapeBox.appendChild(shapeElement);
   });
 };
 

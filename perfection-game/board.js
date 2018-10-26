@@ -1,20 +1,19 @@
-import Shape from './shape.js';
+import Hole from './hole.js';
 
 const boardContainer = document.querySelector('.board-container');
 
 const drawBoard = (shapes) => {
   let fillCount = 0;
   shapes.map((shape) => {
-    const shapeWidget = new Shape(shape);
-    shapeWidget.addFillListener(() => {
+    const holeWidget = new Hole(shape);
+    holeWidget.addFillListener(() => {
       fillCount++;
-      console.log(fillCount, shapes.length);
       if (fillCount === shapes.length) {
         alert('You win!');
       }
     });
-    shapeWidget.appendTo(boardContainer);
+    holeWidget.appendTo(boardContainer);
   });
-}
+};
 
 export default drawBoard;

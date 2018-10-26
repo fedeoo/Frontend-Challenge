@@ -3,7 +3,7 @@ import drawBoard from './board.js';
 import drawShapeBox from './shapeBox.js';
 
 const shapeGenerator = () => {
-  return SHAPES[Math.floor(Math.random() * 4)];
+  return SHAPES[Math.floor(Math.random() * SHAPES.length)];
 };
 
 const run = () => {
