@@ -39,4 +39,8 @@ when given button was clicked, then render this tree again. Ensure the first ite
 
 Time: It depends on the how many features you want to complete.  
 
+## Reactivity
+The core of Vue.js is reactivity system. If you are working with Vue.js or Mobx, it's essential to dig out what happen behind these frameworks.
+Also, it's a great chance for TDD. 
+  
 --------
