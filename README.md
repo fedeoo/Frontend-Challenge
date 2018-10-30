@@ -41,6 +41,49 @@ Time: It depends on the how many features you want to complete.
 
 ## Reactivity
 The core of Vue.js is reactivity system. If you are working with Vue.js or Mobx, it's essential to dig out what happen behind these frameworks.
-Also, it's a great chance for TDD. 
-  
+Also, it's a great chance for TDD.  Assume you're using Jest.
+
+1. Add this test and it should be fail at first, then make it pass. 
+```
+const callback = jest.fn();
+const todos = {
+  count: 0
+};
+observe(todos, callback);
+todos.count = 1;
+expect(callback).toHaveBeenCalled();
+```  
+
+2.  Add test for creating Vue
+
+```js
+const render = jest.fn();
+const app = new Vue({
+  data: {
+    count: 0,
+  },
+  render,
+});
+app.count = 1;
+expect(render).toHaveBeenCalled();
+```
+
+3. dependency collection 
+This task is little bit tricky. You have to consider about dependency collection.
+```
+const render = jest.fn(function() {
+  console.log(this.count);
+});
+const app = new Vue({
+  data: {
+    todo: 'wake up',
+    count: 0,
+  },
+  render,
+});
+app.count = 1;
+expect(render).toHaveBeenCalledTimes(0);
+app.todo = 'sleep';
+expect(render).toHaveBeenCalledTimes(1);
+```
 --------
