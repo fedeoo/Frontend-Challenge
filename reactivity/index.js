@@ -16,7 +16,7 @@ const observe = (obj, callback) => {
   });
 };
 
-function _proxy(data, callback) {
+function _proxy(data) {
   const that = this;
   Object.keys(data).forEach(key => {
     const deps = [];
@@ -31,7 +31,6 @@ function _proxy(data, callback) {
       },
       set: (newVal) => {
         data[key] = newVal;
-        // callback();
         deps.forEach((dep) => {
           dep.apply(that);
         });
