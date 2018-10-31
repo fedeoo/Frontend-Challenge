@@ -19,23 +19,39 @@ const observe = (obj, callback) => {
 function _proxy(data, callback) {
   const that = this;
   Object.keys(data).forEach(key => {
+    const deps = [];
     Object.defineProperty(that, key, {
       enumerable: true,
       configurable: true,
       get: () => {
+        if (currentRender) {
+          deps.push(currentRender);
+        }
         return data[key];
       },
       set: (newVal) => {
         data[key] = newVal;
-        callback();
+        // callback();
+        deps.forEach((dep) => {
+          dep.apply(that);
+        });
       },
     });
   });
 }
 
+let currentRender = null;
+
 class Vue {
   constructor(options = {}) {
-    _proxy.apply(this, [options.data, options.render]);
+    this.render = options.render;
+    const wrapperRender = () => {
+      currentRender = wrapperRender;
+      this.render();
+    };
+    _proxy.apply(this, [options.data, wrapperRender]);
+    currentRender = wrapperRender;
+    this.render();
   }
 }
 
