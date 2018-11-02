@@ -4,6 +4,10 @@ This repo aims for collecting some challenged tasks and complete them.
 You could complete them by yourself just as a programming workouts.  Or you can choose them as a question in [pair programming interviews](https://medium.freecodecamp.org/things-ive-learned-from-pair-programming-interviews-35a4db7d7443).
 Some of them are marked as ⭐, which means I was asked to implement it in an interview.
 
+It's unfair to ask interviewee what they don't know very well. If I was a interviewer, I'd like to ask some question related to their projects. But it's quite challenge,
+Like, If you've worked with React for years,  try to write `Virtual DOM Diff`
+If you've worked with Vue.js for years,  try to implement a reactivity system.
+
 Tips:
 1. **DO NOT** rely on any library or tools but you don't need to consider old browser.
 2. You'd better complete it with valina JS in given time.  Complete them by yourself.
@@ -88,4 +92,16 @@ expect(render).toHaveBeenCalledTimes(1);
 app.todo = 'sleep';
 expect(render).toHaveBeenCalledTimes(1);
 ```
---------
+
+There're lots of details need to be taken care of. You could ask interviewer list some of them to test if they really understand Vue.js.
+
+## co(generator runner) write a `co()` methods
+```js
+function* main() {
+  const num1 = yield 1;
+  const num2 = yield 2;
+  console.log(num1 + num2);
+}
+co(main);
+```
+
